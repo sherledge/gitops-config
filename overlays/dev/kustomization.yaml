@@ -5,5 +5,8 @@ resources:
 namespace: development
 namePrefix: dev-
 images:
-  - name: ghcr.io/sherledge/terraform-aws-platform/app
-    newTag: sha-<YOUR_COMMIT_SHA>
+- name: ghcr.io/sherledge/terraform-aws-platform/app
+  newName: ghcr.io/sherledge/terraform-aws-platform/app
+  newTag: sha-6759711932fdefc151f2199239b294cce8bc9c25
+resources:
+- ../../base
