@@ -5,5 +5,5 @@ bases:
 namespace: development
 namePrefix: dev-
 images:
-  - name: ghcr.io/YOUR_GITHUB_USERNAME/terraform-aws-platform/app
-    newTag: latest # Updated automatically by the app CI pipeline
+  - name: ghcr.io/sherledge/terraform-aws-platform/app
+    newTag: main
