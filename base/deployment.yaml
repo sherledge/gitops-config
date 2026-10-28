@@ -12,6 +12,8 @@ spec:
       labels:
         app: platform-app
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
       - name: app
         image: placeholder-image:latest
