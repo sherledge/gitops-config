@@ -7,7 +7,7 @@ namePrefix: dev-
 images:
 - name: ghcr.io/sherledge/terraform-aws-platform/app
   newName: ghcr.io/sherledge/terraform-aws-platform/app
-  newTag: sha-e7d44f1e27f2b87c53af71cf3d2199fcf5c8e913
+  newTag: sha-a6de30ecc40224f576209c6ab827abfb34fa534f
 - name: placeholder-image
   newName: ghcr.io/sherledge/terraform-aws-platform/app
   newTag: 792171e2a15da9fc8a3ff16c82f878e995fd054d
