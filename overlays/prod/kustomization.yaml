@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+namespace: production
+namePrefix: prod-
+images:
+  - name: placeholder-image
+    newName: ghcr.io/sherledge/terraform-aws-platform/app
+    newTag: 792171e2a15da9fc8a3ff16c82f878e995fd054d
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: platform-app
+      spec:
+        replicas: 3
+    target:
+      kind: Deployment
+      name: platform-app
