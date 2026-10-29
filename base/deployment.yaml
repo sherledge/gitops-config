@@ -7,39 +7,59 @@ spec:
   selector:
     matchLabels:
       app: platform-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0   # never take a pod down before a replacement is ready
+      maxSurge: 1         # spin up one extra pod during rollout
   template:
     metadata:
       labels:
         app: platform-app
     spec:
+      terminationGracePeriodSeconds: 60   # allow in-flight requests to drain
       imagePullSecrets:
         - name: ghcr-secret
       containers:
-      - name: app
-        image: placeholder-image:latest
-        ports:
-        - containerPort: 8000
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 1000
-        resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: app
+          image: placeholder-image:latest
+          ports:
+            - containerPort: 8000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          # startupProbe gates liveness/readiness until the app is up.
+          # 10 failures × 3s period = 30s budget before the pod is killed.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            failureThreshold: 10
+            periodSeconds: 3
+          # livenessProbe: restart the container if it stops responding.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 0   # startupProbe already waited
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          # readinessProbe: stop sending traffic while the pod is unhealthy.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3

@@ -1,0 +1,9 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: platform-app-pdb
+spec:
+  minAvailable: 1       # at least 1 pod must stay up during node drains / upgrades
+  selector:
+    matchLabels:
+      app: platform-app
