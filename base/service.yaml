@@ -2,11 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: platform-app-svc
+  labels:
+    app: platform-app         # needed so the ServiceMonitor can select it
 spec:
   type: ClusterIP
   ports:
-  - port: 80
-    targetPort: 8000
-    protocol: TCP
+    - name: http              # named so ServiceMonitor can reference it by name
+      port: 80
+      targetPort: 8000
+      protocol: TCP
   selector:
     app: platform-app
